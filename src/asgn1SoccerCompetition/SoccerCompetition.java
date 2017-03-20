@@ -106,6 +106,48 @@ public class SoccerCompetition implements SportsCompetition{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} 
+		
+		
+		for (int i = 0; i < numLeagues - 1; i++) {
+			SoccerTeam bottomTeam = null;
+			SoccerTeam topTeam = null;
+			try {
+				bottomTeam = getLeague(i).getBottomTeam();
+			} catch (LeagueException | CompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				topTeam = getLeague(i + 1).getTopTeam();
+			} catch (LeagueException | CompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				getLeague(i).removeTeam(bottomTeam);
+			} catch (LeagueException | CompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				getLeague(i + 1).removeTeam(topTeam);
+			} catch (LeagueException | CompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				getLeague(i).registerTeam(topTeam);
+			} catch (LeagueException | CompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				getLeague(i + 1).registerTeam(bottomTeam);
+			} catch (LeagueException | CompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -120,6 +162,16 @@ public class SoccerCompetition implements SportsCompetition{
 		// HINT The heading for each league is
 		//	System.out.println("---- League" + (i +1) + " ----");
 		//  System.out.println("Official Name" +  '\t' +  "Nick Name" + '\t' + "Form" + '\t' +  "Played" + '\t' + "Won" + '\t' + "Lost" + '\t' + "Drawn" + '\t' + "For" + '\t' + "Against" + '\t' + "GlDiff" + '\t' + "Points");
+		for (int i = 0; i < numLeagues; i++) {
+			System.out.println("---- League" + (i +1) + " ----");
+			System.out.println("Official Name" +  '\t' +  "Nick Name" + '\t' + "Form" + '\t' +  "Played" + '\t' + "Won" + '\t' + "Lost" + '\t' + "Drawn" + '\t' + "For" + '\t' + "Against" + '\t' + "GlDiff" + '\t' + "Points");
+			try {
+				getLeague(i).displayLeagueTable();
+			} catch (CompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 

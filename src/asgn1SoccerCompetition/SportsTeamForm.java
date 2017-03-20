@@ -49,7 +49,7 @@ public class SportsTeamForm {
 		// TODO
 		if (teamForm.size() < maxLength) {
 			teamForm.addFirst(result);
-		} else if (teamForm.size() > maxLength){
+		} else if (teamForm.size() >= maxLength){
 			teamForm.removeLast();
 			teamForm.addFirst(result);
 		}
@@ -70,14 +70,18 @@ public class SportsTeamForm {
 	public String toString(){
 		// TO DO
 		String result = "";
-		for (int i = 0; i < maxLength; i++) {
-			if (teamForm.get(i) != null) {
-				result += teamForm.get(i).getChar();
-			} else {
-				result += "-";
-			}
+		if (teamForm.size() == 0) {
+			return "-----"; 
+		} else {
+			for (int i = 0; i < maxLength; i++) {
+				if (teamForm.get(i) == null) {
+					result += "-";
+			    } else {
+				    result += teamForm.get(i).getChar();
+			    }
+		    }
+		    return result;
 		}
-		return result;
 	}
 	
 	

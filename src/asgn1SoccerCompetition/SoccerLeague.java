@@ -2,6 +2,7 @@ package asgn1SoccerCompetition;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import asgn1Exceptions.LeagueException;
 import asgn1Exceptions.TeamException;
@@ -54,7 +55,7 @@ public class SoccerLeague implements SportsLeague{
 		// TO DO
 		if ( seasonStarted == true || teamsList.size() >= requiredTeams || containsTeam(team.getOfficialName()) )
 			throw new LeagueException();
-		teamsList.add(team);
+		teamsList.add(0, team);
 	}
 	
 	/**
@@ -104,7 +105,9 @@ public class SoccerLeague implements SportsLeague{
 		for (SoccerTeam team: teamsList) {
 			team.resetStats();
 		}
+		sortTeams();
 		seasonStarted = true;
+		seasonEnded = false;
 	}
 	
 
@@ -194,6 +197,9 @@ public class SoccerLeague implements SportsLeague{
 	 */
 	public void displayLeagueTable(){
 		// TO DO (optional)
+		for (SoccerTeam team: teamsList) {
+			team.displayTeamDetails();
+		}
 	}	
 	
 	/**
@@ -227,7 +233,12 @@ public class SoccerLeague implements SportsLeague{
 	 */
     public void sortTeams(){		
 		// TO DO 
-    	Collections.sort(teamsList);
+    	Collections.sort(teamsList, new Comparator<SoccerTeam>() {
+    		@Override
+    		public int compare(SoccerTeam team1, SoccerTeam team2) {
+    			return team1.compareTo(team2);
+    		}
+		});
     }
     
     /**
