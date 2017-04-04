@@ -21,8 +21,7 @@ public class SoccerLeague implements SportsLeague{
 	private int requiredTeams;
 	// Specifies is the league is in the off season
 	private boolean offSeason;
-	private boolean seasonEnded;
-	private boolean seasonStarted;
+	
 	private ArrayList<SoccerTeam> teamsList;
 	
 	
@@ -38,8 +37,7 @@ public class SoccerLeague implements SportsLeague{
 		// TO DO
 		this.requiredTeams = requiredTeams;
 		teamsList = new ArrayList<SoccerTeam>(requiredTeams);
-		seasonEnded = false;
-		seasonStarted = false;
+		offSeason = true;
 	}
 
 	
@@ -53,7 +51,7 @@ public class SoccerLeague implements SportsLeague{
 	 */
 	public void registerTeam(SoccerTeam team) throws LeagueException {
 		// TO DO
-		if ( seasonStarted == true || teamsList.size() >= requiredTeams || containsTeam(team.getOfficialName()) )
+		if ( offSeason == false || teamsList.size() >= requiredTeams || containsTeam(team.getOfficialName()) )
 			throw new LeagueException();
 		teamsList.add(0, team);
 	}
@@ -66,7 +64,7 @@ public class SoccerLeague implements SportsLeague{
 	 */
 	public void removeTeam(SoccerTeam team) throws LeagueException{
 		// TO DO
-		if ( seasonEnded == false || !containsTeam(team.getOfficialName()))
+		if ( offSeason == false || !containsTeam(team.getOfficialName()))
 			throw new LeagueException();
 		teamsList.remove(team);
 	}
@@ -100,14 +98,13 @@ public class SoccerLeague implements SportsLeague{
 	 */
 	public void startNewSeason() throws LeagueException{
 		// TO DO 
-		if (requiredTeams != getRegisteredNumTeams() || seasonStarted == true)
+		if (requiredTeams != getRegisteredNumTeams() || offSeason == false)
 			throw new LeagueException();
 		for (SoccerTeam team: teamsList) {
 			team.resetStats();
 		}
 		sortTeams();
-		seasonStarted = true;
-		seasonEnded = false;
+		offSeason = false;
 	}
 	
 
@@ -118,10 +115,9 @@ public class SoccerLeague implements SportsLeague{
 	 */
 	public void endSeason() throws LeagueException{
 		// TO DO 
-		if (seasonStarted == false) 
+		if (offSeason == true) 
 			throw new LeagueException();
-		seasonStarted = false;
-		seasonEnded = true;
+		offSeason = true;
 	}
 	
 	/**
@@ -151,9 +147,7 @@ public class SoccerLeague implements SportsLeague{
     		if (oName.equals(name)) {
     			team = t;
     			teamFound = true;
-    			break;
-    			
-    			
+    			break;			
     		} 
     	} 
 		if (!teamFound) throw new LeagueException();
@@ -172,21 +166,26 @@ public class SoccerLeague implements SportsLeague{
 	 */
 	public void playMatch(String homeTeamName, int homeTeamGoals, String awayTeamName, int awayTeamGoals) throws LeagueException{
 		// TO DO 
-		if ( seasonStarted == false || homeTeamName == awayTeamName)
+		if ( offSeason == true || homeTeamName == awayTeamName)
 			throw new LeagueException();
+		
+		// Play match for home team
 		SoccerTeam homeTeam = getTeamByOfficalName(homeTeamName);
 		try {
 			homeTeam.playMatch(homeTeamGoals, awayTeamGoals);
 		} catch (TeamException e) {
 			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		
+		// Play match for away team
 		SoccerTeam awayTeam = getTeamByOfficalName(awayTeamName);
 		try {
 			awayTeam.playMatch(awayTeamGoals, homeTeamGoals);
 		} catch (TeamException e) {
 			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		sortTeams();

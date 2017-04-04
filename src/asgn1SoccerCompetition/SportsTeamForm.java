@@ -70,18 +70,15 @@ public class SportsTeamForm {
 	public String toString(){
 		// TO DO
 		String result = "";
-		if (teamForm.size() == 0) {
-			return "-----"; 
-		} else {
-			for (int i = 0; i < maxLength; i++) {
-				if (teamForm.get(i) == null) {
-					result += "-";
-			    } else {
-				    result += teamForm.get(i).getChar();
-			    }
-		    }
-		    return result;
+		for (WLD form: teamForm) {
+			result += form.getChar();
 		}
+		if (result.length() < maxLength) {
+			for (int i = result.length(); i < maxLength; i++) {
+				result += "-";
+			}
+		}
+		return result;
 	}
 	
 	

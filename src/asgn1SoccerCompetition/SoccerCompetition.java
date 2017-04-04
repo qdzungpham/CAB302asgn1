@@ -25,7 +25,6 @@ public class SoccerCompetition implements SportsCompetition{
 	
 	private ArrayList<SoccerLeague> leaguesList;
 	private int numLeagues;
-	private int numTeams;
 	
 	/**
 	 * Creates the model for a new soccer competition with a specific name,
@@ -41,10 +40,9 @@ public class SoccerCompetition implements SportsCompetition{
 
 		// TO DO Complete 
 		leaguesList = new ArrayList<SoccerLeague>(numLeagues);
-		this.numTeams = numTeams;
 		this.numLeagues = numLeagues;
 		
-		
+		// Create new leagues for the competition, depending on numLeagues
 		for (int i = 0; i < numLeagues; i++) {
 			SoccerLeague league = new SoccerLeague(numTeams);
 			leaguesList.add(league);
@@ -82,6 +80,7 @@ public class SoccerCompetition implements SportsCompetition{
 				league.startNewSeason();
 			} catch (LeagueException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 			
@@ -104,52 +103,65 @@ public class SoccerCompetition implements SportsCompetition{
 				league.endSeason();
 			} catch (LeagueException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
-		} 
-		
-		
+		} 	
+		if (numLeagues > 1) {
+			doPromotionAndRelegation(); 
+		}
+
+	}
+
+	// Do promotion and relegation between the leagues
+	private void doPromotionAndRelegation() {
 		for (int i = 0; i < numLeagues - 1; i++) {
+			
 			SoccerTeam bottomTeam = null;
 			SoccerTeam topTeam = null;
 			try {
 				bottomTeam = getLeague(i).getBottomTeam();
 			} catch (LeagueException | CompetitionException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 			try {
 				topTeam = getLeague(i + 1).getTopTeam();
 			} catch (LeagueException | CompetitionException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 			try {
 				getLeague(i).removeTeam(bottomTeam);
 			} catch (LeagueException | CompetitionException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 			try {
 				getLeague(i + 1).removeTeam(topTeam);
 			} catch (LeagueException | CompetitionException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 			try {
 				getLeague(i).registerTeam(topTeam);
 			} catch (LeagueException | CompetitionException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 			try {
 				getLeague(i + 1).registerTeam(bottomTeam);
 			} catch (LeagueException | CompetitionException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	/** 
@@ -169,6 +181,7 @@ public class SoccerCompetition implements SportsCompetition{
 				getLeague(i).displayLeagueTable();
 			} catch (CompetitionException e) {
 				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 		}
