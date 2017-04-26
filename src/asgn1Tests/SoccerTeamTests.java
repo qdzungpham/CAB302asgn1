@@ -19,9 +19,11 @@ import asgn1SoccerCompetition.SoccerTeam;
 public class SoccerTeamTests {
 	
 	private SoccerTeam test;
+
 	@Before
 	public void newSoccerTeam() throws TeamException {
 		test = new SoccerTeam("Metropolis", "Men of Steel");
+
 	}
 	@Test(expected = TeamException.class)
 	public void noOfficialName() throws TeamException{
@@ -87,10 +89,30 @@ public class SoccerTeamTests {
 	}
 	
 	@Test
+	public void getGoalsScoredSeasonPlay5Matches() throws TeamException{
+		test.playMatch(3, 1);
+		test.playMatch(4, 2);
+		test.playMatch(1, 2);
+		test.playMatch(2, 2);
+		test.playMatch(4, 2);
+		assertEquals(14, test.getGoalsScoredSeason());
+	}
+	
+	@Test
 	public void getGoalsConcededSeasonPlay2Matches() throws TeamException{
 		test.playMatch(1, 2);
 		test.playMatch(2, 4);
 		assertEquals(6, test.getGoalsConcededSeason());
+	}
+	
+	@Test
+	public void getGoalsConcededSeasonPlay5Matches() throws TeamException{
+		test.playMatch(1, 2);
+		test.playMatch(2, 1);
+		test.playMatch(2, 0);
+		test.playMatch(2, 3);
+		test.playMatch(2, 2);
+		assertEquals(8, test.getGoalsConcededSeason());
 	}
 	
 	@Test
@@ -113,7 +135,7 @@ public class SoccerTeamTests {
 	}
 	
 	@Test
-	public void getMatchesDrawnNormalCase() throws TeamException{
+	public void getMatchesDrawnPlay4Matches() throws TeamException{
 		test.playMatch(2, 2);
 		test.playMatch(2, 4);
 		test.playMatch(4, 4);
@@ -165,17 +187,45 @@ public class SoccerTeamTests {
 	}
 	
 	@Test(expected = TeamException.class)
-	public void playMatchLessThan0Exception() throws TeamException{
-		test.playMatch(-2, -1);
+	public void playMatchGoalsForLessThan0Exception() throws TeamException{
+		test.playMatch(-2, 1);
 	}
 	
 	@Test(expected = TeamException.class)
-	public void playMatchGreaterThan20Exception() throws TeamException{
-		test.playMatch(21, 22);
+	public void playMatchGoalsForGreaterThan20Exception() throws TeamException{
+		test.playMatch(21, 1);
+	}
+	
+	@Test(expected = TeamException.class)
+	public void playMatchGoalsAgainstLessThan0Exception() throws TeamException{
+		test.playMatch(2, -11);
+	}
+	
+	@Test(expected = TeamException.class)
+	public void playMatchGoalsAgainstGreaterThan20Exception() throws TeamException{
+		test.playMatch(2, 23);
 	}
 	
 	@Test
-	public void playMatchPlaySeveralMatches() throws TeamException{
+	public void playMatchPlay7Matches() throws TeamException{
+		test.playMatch(2, 1);
+		test.playMatch(2, 2);
+		test.playMatch(2, 3);
+		test.playMatch(2, 1);
+		test.playMatch(2, 2);
+		test.playMatch(4, 3);
+		test.playMatch(2, 6);
+		assertEquals(16, test.getGoalsScoredSeason());
+		assertEquals(18, test.getGoalsConcededSeason());
+		assertEquals(3, test.getMatchesWon());
+		assertEquals(2, test.getMatchesLost());
+		assertEquals(2, test.getMatchesDrawn());
+		assertEquals(11, test.getCompetitionPoints());
+		assertEquals("LWDWL", test.getFormString());
+	}
+	
+	@Test
+	public void playMatchPlay4Matches() throws TeamException{
 		test.playMatch(2, 1);
 		test.playMatch(2, 2);
 		test.playMatch(2, 3);
@@ -190,7 +240,7 @@ public class SoccerTeamTests {
 	}
 	
 	@Test
-	public void resetStats() throws TeamException{
+	public void resetStatsAfterSeveralMatches() throws TeamException{
 		test.playMatch(2, 1);
 		test.playMatch(2, 2);
 		test.playMatch(2, 3);
@@ -203,6 +253,56 @@ public class SoccerTeamTests {
 		assertEquals(0, test.getMatchesDrawn());
 		assertEquals(0, test.getCompetitionPoints());
 		assertEquals("-----", test.getFormString());
+	}
+	
+	@Test
+	public void compareToSamePointsSameDifSameName() throws TeamException {
+		SoccerTeam test2 = new SoccerTeam("Metropolis", "Men of Steel");
+		assertEquals(0, test.compareTo(test2));
+	}
+	
+	@Test
+	public void compareToOtherMorePoints() throws TeamException {
+		SoccerTeam test2 = new SoccerTeam("Gotham City", "Dark Knights");
+		test.playMatch(0, 1);
+		test2.playMatch(3, 2);
+		assertTrue(test.compareTo(test2) > 0);
+	}
+	
+	@Test
+	public void compareToThisTeamMorePoints() throws TeamException {
+		SoccerTeam test2 = new SoccerTeam("Gotham City", "Dark Knights");
+		test.playMatch(2, 1);
+		test2.playMatch(0, 2);
+		assertTrue(test.compareTo(test2) < 0);
+	}
+	
+	@Test
+	public void compareToSamePointOtherMoreGoalsDiff() throws TeamException {
+		SoccerTeam test2 = new SoccerTeam("Gotham City", "Dark Knights");
+		test.playMatch(3, 1);
+		test2.playMatch(5, 2);
+		assertTrue(test.compareTo(test2) > 0);
+	}
+	
+	@Test
+	public void compareToSamePointThisTeamMoreGoalsDiff() throws TeamException {
+		SoccerTeam test2 = new SoccerTeam("Gotham City", "Dark Knights");
+		test.playMatch(3, 1);
+		test2.playMatch(3, 2);
+		assertTrue(test.compareTo(test2) < 0);
+	}
+	
+	@Test
+	public void compareToSamePointSameGoalsDiffOtherNameBefore() throws TeamException {
+		SoccerTeam test2 = new SoccerTeam("Gotham City", "Dark Knights");
+		assertTrue(test.compareTo(test2) > 0);
+	}
+	
+	@Test
+	public void compareToSamePointSameGoalsDiffThisTeamNameBefore() throws TeamException {
+		SoccerTeam test2 = new SoccerTeam("Potham City", "Dark Knights");
+		assertTrue(test.compareTo(test2) < 0);
 	}
 
 }

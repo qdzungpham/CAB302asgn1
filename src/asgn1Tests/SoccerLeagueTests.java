@@ -146,6 +146,14 @@ public class SoccerLeagueTests {
 		assertEquals(true, test.isOffSeason());		
 	}
 	
+	@Test
+	public void isOffSeason() throws TeamException, LeagueException {
+		SoccerTeam team3 = new SoccerTeam("Paradise Island", "Wicked Wonders");
+		test.registerTeam(team3);
+		test.startNewSeason();
+		assertEquals(false, test.isOffSeason());
+	}
+	
 	@Test(expected = LeagueException.class)
 	public void getTeamByOfficalNameNoTeamFoundException() throws TeamException, LeagueException {
 		SoccerTeam team3 = new SoccerTeam("Paradise Island", "Wicked Wonders");
@@ -176,13 +184,14 @@ public class SoccerLeagueTests {
 	}
 	
 	@Test
-	public void playMatchPlaySeveralMatch() throws TeamException, LeagueException {
+	public void playMatchPlaySeveralMatches() throws TeamException, LeagueException {
 		SoccerTeam team3 = new SoccerTeam("Paradise Island", "Wicked Wonders");
 		test.registerTeam(team3);
 		test.startNewSeason();
 		test.playMatch("Metropolis", 4, "Paradise Island", 2);
 		test.playMatch("Paradise Island", 1, "Metropolis", 3);
 		assertEquals(3, team3.getGoalsScoredSeason());
+		assertEquals(6, team1.getCompetitionPoints());
 		assertEquals(7, team1.getGoalsScoredSeason());
 	}
 	
@@ -209,7 +218,7 @@ public class SoccerLeagueTests {
 	}
 	
 	@Test
-	public void getTopTeamNormalCase() throws TeamException, LeagueException {
+	public void getTopTeamAfterSeveralMatches() throws TeamException, LeagueException {
 		SoccerTeam team3 = new SoccerTeam("Paradise Island", "Wicked Wonders");
 		test.registerTeam(team3);
 		test.startNewSeason();
